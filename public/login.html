@@ -9,10 +9,12 @@
     <h1>Login Page</h1>
     <form id="login-form">
         <input type="email" placeholder="Email" id="email" required>
+        <input type="number" placeholder="OTP" id="otp" required>
+        <button onclick="sendOtp()">Request OTP</button>
         <input type="password" placeholder="Password" id="password" required>
         <button type="submit">Login</button>
     </form>
     <p id="login-message"></p>
-    <script src="script.js"></script>
+    <script src="./login.js"></script>
 </body>
 </html>
