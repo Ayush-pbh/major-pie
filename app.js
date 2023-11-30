@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://admingun:randomkisses@cluster0.kkn9p3a.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb+srv://admingun:<password>@cluster0.kkn9p3a.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 /*
 mongodb+srv://admingun:randomkisses@cluster0.kkn9p3a.mongodb.net/?retryWrites=true&w=majority
 mongodb+srv - monngodb atlas connection
@@ -56,7 +56,7 @@ const transporter = nodemailer.createTransport({
   port: 465,
   auth: {
     user: 'noreply@greyproject.studio',
-    pass: "NnP?d#X6gaMKdKqS",
+    pass: "Password",
   },
   secure: true,
 });
