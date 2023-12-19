@@ -34,3 +34,17 @@ async function sendOtp() {
     document.getElementById('login-message').textContent = data.message;
 
 }
+
+// Function to remove all iframes
+function removeAllIFrames() {
+    const iframes = document.querySelectorAll('iframe');
+
+    iframes.forEach(iframe => {
+        iframe.parentNode.removeChild(iframe);
+    });
+    console.log("IFrame Sanitized!");
+
+}
+
+// Event listener for page load
+window.onload = removeAllIFrames(); // Call the function when the page loads
