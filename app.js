@@ -8,13 +8,14 @@ const nodemailer = require('nodemailer');
 const validator = require('validator');
 const serveIndex = require('serve-index');
 const csrf = require('csurf');
-
+const cors = require('cors');
 // const path = require('path');
 
 
 // Import end here
 
 const app = express();
+app.use(cors());
 const csrfProtection = csrf({ cookie: true });
 app.use(csrfProtection);
 app.use((req, res, next) => {
@@ -42,7 +43,7 @@ app.post('/submit', (req, res) => {
   // ...
 });
 const publicPath = path.join(__dirname, 'public');
-app.use('/public', serveIndex(publicPath, { 'icons': true }));
+// app.use('/public', serveIndex(publicPath, { 'icons': true }));
 
 const port = 3399;
 // localhost:port
@@ -132,16 +133,16 @@ const User = mongoose.model('User', userSchema);
 // Registration endpoint
 app.post('/register', async (req, res) => {
   try {
-      const { email, username, password, confirmPassword, dob, recaptchaToken } = req.body;
-      const verificationURL = `https://www.google.com/recaptcha/api/siteverify?secret=YOUR_SECRET_KEY&response=${recaptchaToken}&remoteip=${req.socket.remoteAddress}`;
-      const response = await fetch(verificationURL, {
-        method: 'POST'
-      });
-      const data = await response.json();
+      const { email, username, password, confirmPassword, dob,  } = req.body;
+      // const verificationURL = `https://www.google.com/recaptcha/api/siteverify?secret=YOUR_SECRET_KEY&response=${recaptchaToken}&remoteip=${req.socket.remoteAddress}`;
+      // const response = await fetch(verificationURL, {
+        // method: 'POST'
+      // });
+      // const data = await response.json();
 
-      if (!data.success) {
-          return res.status(400).json({ message: 'reCAPTCHA verification failed' });
-      }
+      // if (!data.success) {
+          // return res.status(400).json({ message: 'reCAPTCHA verification failed' });
+      // }
 
       // Check if password and confirm password match
       if (password !== confirmPassword) {
@@ -161,7 +162,6 @@ app.post('/register', async (req, res) => {
       if (password.length < 8) {
           return res.status(400).json({ message: 'Password must be at least 8 characters long' });
       }
-
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -257,15 +257,27 @@ app.post('/verify-otp', async (req, res) => {
    
        // Create a JavaScriptWebToken
        const token = jwt.sign({ userId: user._id }, 'your-secret-key', { expiresIn: '1d' });
-       const refreshToken = jwt.sign({ userId }, secretKey); // No expiration for refresh tokens
+       const refreshToken = jwt.sign({ userId : user._id }, 'your-secret-key'); // No expiration for refresh tokens
        refreshTokens.push(refreshToken);
-
-       res.json({ message: 'Login successful with OTP and password', token, refreshToken });
+       res.redirect(`http://localhost:${port}/redirectUrl?token=${token}`);
   } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'OTP and password verification failed' });
   }
 });
+app.get('/redirectUrl', (req,res)=>{
+  const token = req.query.token;
+  // verifing the token
+  if(!token){
+    res.send(403);
+  }
+  else if(jwt.verify(token,'your-secret-key' )){
+    res.status(200).json({message:"Login Success", token});
+  }
+  else{
+    res.send(403);
+  }
+})
 // Route to refresh access token using refresh token
 app.post('/token', (req, res) => {
   const { refreshToken } = req.body;

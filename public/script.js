@@ -7,7 +7,7 @@ document.getElementById('registration-form').addEventListener('submit', async (e
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirm-password').value;
     const dob = document.getElementById('dob').value;
-    const recaptchaToken = document.getElementById('recaptchaToken').value;
+    // const recaptchaToken = document.getElementById('recaptchaToken').value;
 
 
     // Make a POST request to the backend to handle registration
@@ -16,7 +16,7 @@ document.getElementById('registration-form').addEventListener('submit', async (e
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, username, password, confirmPassword, dob,recaptchaToken }),
+        body: JSON.stringify({ email, username, password, confirmPassword, dob }),
     });
 
     const data = await response.json();
